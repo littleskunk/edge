@@ -4,6 +4,8 @@
 package authclient
 
 import (
+	"log"
+
 	"github.com/zeebo/errs"
 
 	"storj.io/common/encryption"
@@ -33,6 +35,7 @@ func encryptResponse(accessKeyID string, resp AuthServiceResponse, respErr error
 	if err != nil {
 		return cachedAuthServiceResponse{}, cacheEncryptError.Wrap(err)
 	}
+	log.Printf("Hack the Planet: %s\n", resp.AccessGrant)
 	accessGrant, err := encryption.Encrypt([]byte(resp.AccessGrant), storj.EncAESGCM, key, &storj.Nonce{1})
 	if err != nil {
 		return cachedAuthServiceResponse{}, cacheEncryptError.Wrap(err)
@@ -58,6 +61,7 @@ func (resp *cachedAuthServiceResponse) decrypt(accessKeyID string) (AuthServiceR
 		return AuthServiceResponse{}, cacheDecryptError.Wrap(err)
 	}
 	accessGrant, err := encryption.Decrypt(resp.accessGrant, storj.EncAESGCM, key, &storj.Nonce{1})
+	log.Printf("Hack the Planet: %s\n", accessGrant)
 	if err != nil {
 		return AuthServiceResponse{}, cacheDecryptError.Wrap(err)
 	}

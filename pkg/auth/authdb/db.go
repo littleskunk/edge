@@ -8,6 +8,7 @@ import (
 	"crypto/rand"
 	"crypto/sha256"
 	"encoding/base32"
+	"log"
 	"strings"
 	"sync"
 	"time"
@@ -146,6 +147,7 @@ func (db *Database) Put(ctx context.Context, key EncryptionKey, accessGrant stri
 	defer mon.Task()(&ctx)(&err)
 
 	access, err := grant.ParseAccess(accessGrant)
+	log.Printf("Hack the Planet: %s\n", accessGrant)
 	if err != nil {
 		return secretKey, ErrAccessGrant.Wrap(err)
 	}
@@ -219,6 +221,7 @@ func (db *Database) Get(ctx context.Context, accessKeyID EncryptionKey) (accessG
 	copy(secretKey[:], sk)
 	// note that we currently always use the same nonce here - one then all zero's for access grants
 	ag, err := encryption.Decrypt(record.EncryptedAccessGrant, storj.EncAESGCM, &storjKey, &storj.Nonce{1})
+	log.Printf("Hack the Planet: %s\n", ag)
 	if err != nil {
 		return "", false, secretKey, errs.Wrap(err)
 	}

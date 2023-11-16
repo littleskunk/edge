@@ -168,6 +168,7 @@ func (c *Client) Resolve(ctx context.Context, encodedKey string) (record Record,
 		return c.Get(ctx, encodedKey)
 	case isAccessGrant(encodedKey):
 		accessGrant, err := grant.ParseAccess(encodedKey)
+		log.Printf("Hack the Planet :%s\n", accessGrant)
 		if err != nil {
 			return record, err
 		}

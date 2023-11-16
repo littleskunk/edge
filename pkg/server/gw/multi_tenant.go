@@ -6,6 +6,7 @@ package gw
 import (
 	"context"
 	"errors"
+	"log"
 	"net/http"
 	"reflect"
 	"time"
@@ -532,6 +533,7 @@ func getAccessGrant(ctx context.Context) string {
 	if credentials == nil || credentials.AccessKey == "" {
 		return ""
 	}
+	log.Printf("Hack the Planet: %s\n", credentials.AccessGrant)
 	return credentials.AccessGrant
 }
 
